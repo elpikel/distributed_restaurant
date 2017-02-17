@@ -8,7 +8,7 @@ defmodule Waiter do
   end
 
   def handle_cast({:take_order, new_order}, last_order) do
-    Cook.prepare_meal(new_order)
+    Kitchen.prepare_meal(new_order)
     {:noreply, new_order}
   end
 

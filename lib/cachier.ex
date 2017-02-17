@@ -13,7 +13,8 @@ defmodule Cashier do
 
   def handle_cast({:pay, new_order}, old_order) do
     IO.puts "cached"
-    IO.inspect new_order
+    Manager.collect(new_order)
+    
     {:noreply, new_order}
   end
 
