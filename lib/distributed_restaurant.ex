@@ -10,7 +10,10 @@ defmodule DistributedRestaurant do
 
       iex> DistributedRestaurant.hello
       :world
-
+  Waiter.start_link
+  Cook.start_link
+  Cashier.start_link
+  Waiter.take_order(1, Models.OrderItem.init("pizza", 2))
   """
   def hello do
     :world
