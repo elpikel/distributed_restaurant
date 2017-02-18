@@ -2,6 +2,7 @@ defmodule Models.Order do
   use Timex
 
   defstruct [
+    id: "",
     table_number: 0,
     order_items: [],
     time_to_cook: 0,
@@ -15,6 +16,7 @@ defmodule Models.Order do
     expires_at = Timex.shift(Timex.now, seconds: time_to_wait)
 
     %Models.Order{
+      id: UUID.uuid1(),
       table_number: table_number,
       order_items: order_items,
       expires_at: expires_at

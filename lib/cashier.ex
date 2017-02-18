@@ -12,7 +12,7 @@ defmodule Cashier do
     GenServer.cast(__MODULE__, {:pay, order})
   end
 
-  def handle_cast({:pay, new_order}, old_order) do
+  def handle_cast({:pay, new_order}, _old_order) do
     IO.puts "cashed"
     Manager.collect(new_order)
 

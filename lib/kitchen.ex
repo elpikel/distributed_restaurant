@@ -7,10 +7,10 @@ defmodule Kitchen do
     GenServer.start_link(__MODULE__, state, name: @name)
   end
 
-  def init(state) do
-    cooks = start_cooks
+  def init(_state) do
+    cooks = start_cooks()
 
-    {:ok, {cooks, -1}}
+    {:ok, {cooks, -1, []}}
   end
 
   def start_cooks do
@@ -24,12 +24,18 @@ defmodule Kitchen do
     GenServer.cast(@name, {:prepare_meal, order})
   end
 
-  def handle_cast({:prepare_meal, order}, {cooks, last_started}) do
+  def handle_cast({:prepare_meal, order}, {cooks, last_started, orders}) do
     cook_no = rem((last_started + 1), 3)
     cook = Map.get(cooks, cook_no)
-    
-    Cook.prepare_meal(cook, order)
 
-    {:noreply, {cooks, cook_no}}
+    cond do
+      Enum.any?(orders, fn(o) -> o.id == order.id end) ->
+        IO.puts "order already handled #{order.id}"
+      true ->
+        Cook.prepare_meal(cook, order)
+        orders = [order | orders]
+    end
+
+    {:noreply, {cooks, cook_no, orders}}
   end
 end

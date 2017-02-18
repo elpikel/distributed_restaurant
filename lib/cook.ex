@@ -19,7 +19,7 @@ defmodule Cook do
     end
   end
 
-  def handle_cast({:prepare_meal, new_order}, last_order) do
+  def handle_cast({:prepare_meal, new_order}, _last_order) do
     IO.puts "meal prepared"
     Cashier.pay(new_order)
 
