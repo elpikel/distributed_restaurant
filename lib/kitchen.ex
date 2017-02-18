@@ -3,7 +3,7 @@ defmodule Kitchen do
 
   def start_link(state \\ []) do
     IO.puts "Starting #{__MODULE__}..."
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    GenServer.start_link(__MODULE__, state, name: :kitchen)
   end
 
   def init(state) do
