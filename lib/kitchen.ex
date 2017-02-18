@@ -1,9 +1,10 @@
 defmodule Kitchen do
   use GenServer
+  @name :Kitchen
 
   def start_link(state \\ []) do
     IO.puts "Starting #{__MODULE__}..."
-    GenServer.start_link(__MODULE__, state, name: :kitchen)
+    GenServer.start_link(__MODULE__, state, name: @name)
   end
 
   def init(state) do
@@ -20,7 +21,7 @@ defmodule Kitchen do
   end
 
   def prepare_meal(order) do
-    GenServer.cast(__MODULE__, {:prepare_meal, order})
+    GenServer.cast(@name, {:prepare_meal, order})
   end
 
   def handle_cast({:prepare_meal, order}, {cooks, last_started}) do
