@@ -7,6 +7,7 @@ defmodule Cook do
 
   def prepare_meal(pid, order) do
     IO.puts "starting meal preparation"
+    :timer.sleep(1000)
     order = Models.Order.add_time_to_cook(order, 2000)
 
     GenServer.cast(pid, {:prepare_meal, order})
