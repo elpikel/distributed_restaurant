@@ -2,6 +2,7 @@ defmodule Cook do
   use GenServer
 
   def start_link(state \\ []) do
+    IO.puts "Starting #{__MODULE__}..."
     GenServer.start_link(__MODULE__, state)
   end
 

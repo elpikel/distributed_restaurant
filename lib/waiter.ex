@@ -13,6 +13,7 @@ defmodule Waiter do
   end
 
   def start_link(state \\ []) do
+    IO.puts "Starting #{__MODULE__}..."
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
