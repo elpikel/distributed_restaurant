@@ -7,13 +7,13 @@ defmodule Cashier do
   end
 
   def pay(order) do
-    IO.puts "caching"
+    IO.puts "cashing"
     order = Models.Order.add_calculations(order, 15, 99)
     GenServer.cast(__MODULE__, {:pay, order})
   end
 
   def handle_cast({:pay, new_order}, old_order) do
-    IO.puts "cached"
+    IO.puts "cashed"
     Manager.collect(new_order)
 
     {:noreply, new_order}

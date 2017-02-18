@@ -7,11 +7,16 @@ defmodule Cook do
   end
 
   def prepare_meal(pid, order) do
-    IO.puts "starting meal preparation"
-    :timer.sleep(1000)
-    order = Models.Order.add_time_to_cook(order, 2000)
+    cond do
+      Models.Order.is_expired(order) ->
+        IO.puts "dropping order"
+      true ->
+        IO.puts "starting meal preparation"
+        :timer.sleep(1000)
+        order = Models.Order.add_time_to_cook(order, 2000)
 
-    GenServer.cast(pid, {:prepare_meal, order})
+        GenServer.cast(pid, {:prepare_meal, order})
+    end
   end
 
   def handle_cast({:prepare_meal, new_order}, last_order) do

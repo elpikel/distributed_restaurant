@@ -26,12 +26,10 @@ defmodule Kitchen do
 
   def handle_cast({:prepare_meal, order}, {cooks, last_started}) do
     cook_no = rem((last_started + 1), 3)
-
     cook = Map.get(cooks, cook_no)
-
-    IO.inspect Process.info(cook, :message_queue_len)
-
+    
     Cook.prepare_meal(cook, order)
+
     {:noreply, {cooks, cook_no}}
   end
 end
