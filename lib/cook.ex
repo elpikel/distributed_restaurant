@@ -1,12 +1,15 @@
 defmodule Cook do
   use GenServer
 
-  def start_link(state \\ []) do
-    IO.puts "Starting #{__MODULE__}..."
-    GenServer.start_link(__MODULE__, state)
+  def start_link(cook_id) do
+    IO.puts "Starting #{__MODULE__}-#{cook_id}..."
+    GenServer.start_link(
+      __MODULE__, cook_id,
+      name: via_tuple(cook_id)
+    )
   end
 
-  def prepare_meal(pid, order) do
+  def prepare_meal(cook_id, order) do
     cond do
       Models.Order.is_expired(order) ->
         IO.puts "dropping order"
@@ -15,7 +18,7 @@ defmodule Cook do
         :timer.sleep(1000)
         order = Models.Order.add_time_to_cook(order, 2000)
 
-        GenServer.cast(pid, {:prepare_meal, order})
+        GenServer.cast(via_tuple(cook_id), {:prepare_meal, order})
     end
   end
 
@@ -28,5 +31,9 @@ defmodule Cook do
 
   def init(state) do
     {:ok, state}
+  end
+
+  defp via_tuple(cook_id) do
+    {:via, :gproc, {:n, :l, {:cook, cook_id}}}
   end
 end

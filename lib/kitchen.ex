@@ -1,32 +1,24 @@
 defmodule Kitchen do
   use GenServer
   @name :Kitchen
+  @pool_size 3
 
   def start_link(state \\ []) do
     IO.puts "Starting #{__MODULE__}..."
     GenServer.start_link(__MODULE__, state, name: @name)
+    CooksSupervisor.start_link(@pool_size)
   end
 
   def init(_state) do
-    cooks = start_cooks()
-
-    {:ok, {cooks, -1, []}}
-  end
-
-  def start_cooks do
-    for index <- 0..2, into: Map.new do
-      {:ok, pid} = Cook.start_link
-      {index, pid}
-    end
+    {:ok, {-1, []}}
   end
 
   def prepare_meal(order) do
     GenServer.cast(@name, {:prepare_meal, order})
   end
 
-  def handle_cast({:prepare_meal, order}, {cooks, last_started, orders}) do
-    cook_no = rem((last_started + 1), 3)
-    cook = Map.get(cooks, cook_no)
+  def handle_cast({:prepare_meal, order}, {last_started, orders}) do
+    cook = choose_cook(last_started)
 
     cond do
       Enum.any?(orders, fn(o) -> o.id == order.id end) ->
@@ -36,6 +28,10 @@ defmodule Kitchen do
         orders = [order | orders]
     end
 
-    {:noreply, {cooks, cook_no, orders}}
+    {:noreply, {cook, orders}}
+  end
+
+  defp choose_cook(last_started) do
+    rem((last_started + 1), 3)
   end
 end

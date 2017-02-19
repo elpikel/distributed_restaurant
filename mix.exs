@@ -15,7 +15,7 @@ defmodule DistributedRestaurant.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger, :timex]]
+    [extra_applications: [:logger, :timex, :gproc]]
   end
 
   # Dependencies can be Hex packages:
@@ -30,7 +30,8 @@ defmodule DistributedRestaurant.Mixfile do
   defp deps do
     [
       {:timex, "~> 3.0"},
-      { :uuid, "~> 1.1" }
+      {:uuid, "~> 1.1" },
+      {:gproc, "~> 0.3.1" }
     ]
   end
 end
